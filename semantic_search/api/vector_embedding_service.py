@@ -4,6 +4,7 @@ from .hugging_face_api import HuggingFaceAPI
 from .urls import API_GENERATE_EMBEDDINGS as API_URL
 
 
+# Generates Embeddings using https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2 via Inference API
 class VectorEmbeddingService:
     def __init__(self, api_client: HuggingFaceAPI):
         self.api_client = api_client

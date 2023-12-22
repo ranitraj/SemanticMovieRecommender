@@ -24,7 +24,9 @@ movie_db = MovieDatabase(db_client)
 # Initialize API Services
 embedding_service = VectorEmbeddingService(api_client)
 
-# Example usage
-sentence = "Hello World!"
-embeddings = embedding_service.get_vector_embeddings(sentence)
-print(embeddings)
+
+# Get all movies
+movies_collection = movie_db.get_all_movies()
+
+# Insert vector-embedding column
+
