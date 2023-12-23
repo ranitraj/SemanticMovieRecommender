@@ -28,7 +28,12 @@ embedding_service = VectorEmbeddingService(api_client)
 # Get all movies
 movies_collection = movie_db.get_all_movies()
 
-# Inserts vector-embedding column (if it doesn't already exist)
+# Inserts vector-embedding columns (if they don't already exist)
+movie_db.insert_movie_title_embedding_column(
+    movies_collection=movies_collection,
+    embedding_service=embedding_service
+)
+
 movie_db.insert_movie_plot_embedding_column(
     movies_collection=movies_collection,
     embedding_service=embedding_service

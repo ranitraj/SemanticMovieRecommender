@@ -19,6 +19,32 @@ class MovieDatabase:
         return movies_collection
 
     @staticmethod
+    def insert_movie_title_embedding_column(movies_collection, embedding_service):
+        """
+        Updates the movies collection by adding a 'movie_title_embedding' field for each movie with a title.
+        This method iterates through all movies that have a 'title' field, computes their title embeddings
+        using the provided embedding service, and updates each movie document with the new 'movie_title_embedding'
+        field only if it doesn't already exist.
+
+        The purpose of adding an embedding for the movie titles is typically to facilitate similarity searches,
+        recommendations, or other machine learning tasks where a numerical representation of text is useful.
+
+        Parameters:
+        movies_collection: A MongoDB collection object representing the movies.
+        embedding_service: An object or service capable of providing vector embeddings for text.
+
+        Note: This operation replaces the entire document for each movie with its updated version
+              only if the 'movie_title_embedding' field is not already present.
+        """
+        for cur_movie in movies_collection.find({'title': {"$exists": True}}):
+            # Check if 'movie_title_embedding' already exists
+            if 'movie_title_embedding' not in cur_movie:
+                # Compute the embedding vector for the current movie's title
+                cur_movie['movie_title_embedding'] = embedding_service.get_vector_embeddings(cur_movie['title'])
+                # Replace the old movie document with the updated one (now including title embeddings)
+                movies_collection.replace_one({'_id': cur_movie['_id']}, cur_movie)
+
+    @staticmethod
     def insert_movie_plot_embedding_column(movies_collection, embedding_service):
         """
         Updates the movies collection by adding a 'movie_plot_embedding' field for each movie.
@@ -40,4 +66,3 @@ class MovieDatabase:
                 cur_movie['movie_plot_embedding'] = embedding_service.get_vector_embeddings(cur_movie['plot'])
                 # Replace the old movie document with the updated one (now including plot embeddings)
                 movies_collection.replace_one({'_id': cur_movie['_id']}, cur_movie)
-
