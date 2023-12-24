@@ -66,3 +66,11 @@ class MovieDatabase:
                 cur_movie['movie_plot_embedding'] = embedding_service.get_vector_embeddings(cur_movie['plot'])
                 # Replace the old movie document with the updated one (now including plot embeddings)
                 movies_collection.replace_one({'_id': cur_movie['_id']}, cur_movie)
+
+    @staticmethod
+    def get_plot_recommendations(query, movies_collection, embedding_service):
+        recommendations = movies_collection.aggregate([
+            {
+
+            }
+        ])
