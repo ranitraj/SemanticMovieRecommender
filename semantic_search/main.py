@@ -38,3 +38,17 @@ movie_db.insert_movie_plot_embedding_column(
     movies_collection=movies_collection,
     embedding_service=embedding_service
 )
+
+# Sample query
+query = "man plotting a crime against society"
+
+# Get Top-3 recommendations based on Plot
+recommendations = movie_db.get_plot_recommendations(
+    query=query,
+    movies_collection=movies_collection,
+    embedding_service=embedding_service
+)
+
+# Print the movie Name & Plot for the recommended movies
+for cur_recommendation in recommendations:
+    print(f'Movie Name: {cur_recommendation["title"]},\nMovie Plot: {cur_recommendation["plot"]}\n')

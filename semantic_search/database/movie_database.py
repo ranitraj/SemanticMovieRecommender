@@ -69,8 +69,31 @@ class MovieDatabase:
 
     @staticmethod
     def get_plot_recommendations(query, movies_collection, embedding_service):
-        recommendations = movies_collection.aggregate([
-            {
+        """
+        Retrieves the top 3 movie plot recommendations based on semantic similarity.
 
-            }
+        Args:
+            query (str): The user's query or desired mood/theme.
+            movies_collection: MongoDB collection object containing movies data.
+            embedding_service: Service that converts text to vector embeddings.
+
+        Returns:
+            List of top 3 movie recommendations from the database based on semantic similarity of the plots to the query
+
+        The function uses MongoDB's "$vectorSearch" operator to perform a semantic search:
+        - queryVector: Vector representation of the user's query.
+        - path: Field in the MongoDB documents to compare against, here 'movie_plot_embedding'.
+        - numCandidates: Number of top candidate vectors to retrieve for final ranking.
+        - limit: The number of top similar movies to return.
+        - index: The specific vector search index used in MongoDB (Defined in MongoDB Atlas-Search Tab).
+        """
+        recommendations = movies_collection.aggregate([
+            {"$vectorSearch": {
+                "queryVector": embedding_service.get_vector_embeddings(query),
+                "path": "movie_plot_embedding",
+                "numCandidates": 50,
+                "limit": 3,
+                "index": "MoviePlotVectorSearch",
+            }}
         ])
+        return recommendations
