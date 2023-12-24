@@ -83,7 +83,7 @@ class MovieDatabase:
         The function uses MongoDB's "$vectorSearch" operator to perform a semantic search:
         - queryVector: Vector representation of the user's query.
         - path: Field in the MongoDB documents to compare against, here 'movie_plot_embedding'.
-        - numCandidates: Number of top candidate vectors to retrieve for final ranking.
+        - numCandidates: Number of top candidate vectors to retrieve for final ranking -> Higher No. gives more accuracy
         - limit: The number of top similar movies to return.
         - index: The specific vector search index used in MongoDB (Defined in MongoDB Atlas-Search Tab).
         """
@@ -91,7 +91,7 @@ class MovieDatabase:
             {"$vectorSearch": {
                 "queryVector": embedding_service.get_vector_embeddings(query),
                 "path": "movie_plot_embedding",
-                "numCandidates": 50,
+                "numCandidates": 100,
                 "limit": 3,
                 "index": "MoviePlotVectorSearch",
             }}
